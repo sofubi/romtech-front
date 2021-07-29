@@ -1,25 +1,52 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { Component } from 'react';
+import QuoteList from './components/QuoteList';
+import Login from './components/Login';
+import Signup from './components/Signup'
+import QuoteAdd from './components/QuoteAdd'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  static proptTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
+  render() {
+    const { cookies } = this.props;
+
+    return (
+      <Router>
+        <div className="App">
+          <Link to="/">Login</Link>
+          <Link to="/signup">Signup</Link>
+          <Link to="/quotes">Quotes</Link>
+          <Link to="/add">Add Quotes</Link>
+        </div>
+
+        <Switch>
+          <Route exact path="/">
+            <Login cookies={cookies} />
+          </Route>
+          <Route path="/quotes">
+            <QuoteList cookies={cookies} />
+          </Route>
+          <Route path="/add">
+            <QuoteAdd cookies={cookies} />
+          </Route>
+          <Route path="/signup">
+            <Signup />
+          </Route>
+        </Switch>
+      </Router>
+    );
+  }
 }
 
-export default App;
+export default withCookies(App);
